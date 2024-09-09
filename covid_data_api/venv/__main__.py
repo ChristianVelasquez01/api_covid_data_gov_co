@@ -1,27 +1,27 @@
-from api import get_data, process_data
-from ui import create_covid_data_ui_cli
+import api
+import ui
 
 def main():
-    """
-    Función principal que obtiene datos de COVID-19 desde la API,
-    los convierte en un DataFrame y luego los muestra en una interfaz gráfica.
-    """
-    # Solicitar al usuario el nombre del departamento
-    departament = input("Ingrese el nombre del departamento: ").upper()
+    while True:
+        ui.print_header()
+        option = ui.get_option()
 
-    try:
-        # Obtener datos de la API
-        data = get_data(100, departament)
+        if option == '0':
+            break
+        elif option == '1':
+            ui.print_get_departament()
+            departament = ui.get_departament()
+            ui.separator()
+
+        try:
+            data = api.get_data(25, departament)
+            data_frame = api.process_data(data)
+            ui.print_data_table(data_frame)
         
-        # Procesar los datos con pandas
-        data_frame = process_data(data)
-
-        # Crear la interfaz gráfica con los datos
-        create_covid_data_ui_cli(data_frame)
+        except Exception as message:
+            ui.print_error(message)
     
-    except Exception as e:
-        print(f"Ocurrió un error al obtener o procesar los datos: {e}")
+    print("\n FIN DEL PROGRAMA")
 
-# Llamar a la función principal
 if __name__ == "__main__":
     main()
